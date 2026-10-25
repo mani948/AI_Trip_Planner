@@ -1,7 +1,21 @@
+# Virtual environment
 env/
 .venv/
-__pycache__/
-*.pyc
+venv/
+
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# IDE files
+.vscode/
