@@ -1,43 +1,41 @@
+
+import re
+
+
 class Calculator:
     @staticmethod
-    def multiply(a: int, b: int) -> int:
-        """
-        Multiply two integers.
+    def _to_number(value) -> float:
+        """Convert a numeric value or currency-formatted string to float."""
+        if isinstance(value, (int, float)):
+            return float(value)
 
-        Args:
-            a (int): The first integer.
-            b (int): The second integer.
+        if not isinstance(value, str):
+            raise ValueError(f"Expected a number, received {value!r}")
 
-        Returns:
-            int: The product of a and b.
-        """
-        return a * b
-    
+        value = value.strip()
+        value = re.sub(r"[£$€₹,\s]", "", value)
+
+        try:
+            return float(value)
+        except ValueError as e:
+            raise ValueError(
+                f"Invalid numeric value: {value!r}"
+            ) from e
+
+    @staticmethod
+    def multiply(a: float, b: float) -> float:
+        """Multiply two numeric values."""
+        return Calculator._to_number(a) * Calculator._to_number(b)
+
     @staticmethod
     def calculate_total(*x: float) -> float:
-        """
-        Calculate sum of the given list of numbers
+        """Calculate the sum of the given numbers."""
+        return sum(Calculator._to_number(value) for value in x)
 
-        Args:
-            x (list): List of floating numbers
-
-        Returns:
-            float: The sum of numbers in the list x
-        """
-        return sum(x)
-    
     @staticmethod
     def calculate_daily_budget(total: float, days: int) -> float:
-        """
-        Calculate daily budget
+        """Calculate the daily budget."""
+        total = Calculator._to_number(total)
+        days = int(Calculator._to_number(days))
 
-        Args:
-            total (float): Total cost.
-            days (int): Total number of days
-
-        Returns:
-            float: Expense for a single day
-        """
-        return total / days if days > 0 else 0
-    
-    
+        return total / days if days > 0 else 0.0
